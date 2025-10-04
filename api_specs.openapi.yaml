@@ -1,0 +1,59 @@
+openapi: 3.0.3
+info:
+  title: TEMPO AQ Forecaster API
+  version: 0.1.0
+servers:
+  - url: https://api.example.com
+paths:
+  /timeseries:
+    get:
+      summary: Get AQ time series for a point
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema: {type: number}
+        - in: query
+          name: lon
+          required: true
+          schema: {type: number}
+        - in: query
+          name: pollutant
+          required: true
+          schema: {type: string, enum: [PM25, O3, NO2]}
+      responses:
+        "200":
+          description: OK
+  /grid:
+    get:
+      summary: Get gridded forecast/nowcast tiles for a bbox and time
+      parameters:
+        - in: query
+          name: bbox
+          schema: {type: string, example: "-123.3,47.2,-121.8,48.1"}
+        - in: query
+          name: ts
+          schema: {type: string, format: date-time}
+        - in: query
+          name: pollutant
+          schema: {type: string, enum: [PM25, O3, NO2]}
+      responses:
+        "200":
+          description: OK
+  /alerts:
+    post:
+      summary: Create/preview an alert for a user profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id: {type: string}
+                lat: {type: number}
+                lon: {type: number}
+                pollutant: {type: string}
+      responses:
+        "200":
+          description: OK

@@ -1,0 +1,109 @@
+# Data schema for the MVP (star-ish schema with provenance)
+tables:
+  stations:
+    description: Registry of ground stations and their metadata
+    primary_key: [station_id]
+    columns:
+      - {name: station_id, type: string}
+      - {name: name, type: string}
+      - {name: network, type: string, example: OpenAQ|AirNow|Pandora}
+      - {name: pollutant, type: string, example: PM25|O3|NO2}
+      - {name: latitude, type: float}
+      - {name: longitude, type: float}
+      - {name: elevation_m, type: float, nullable: true}
+      - {name: tz, type: string, nullable: true}
+  observations:
+    description: Ground observations (surface truth) at stations
+    partition: date
+    primary_key: [station_id, ts]
+    columns:
+      - {name: station_id, type: string}
+      - {name: ts, type: timestamp}
+      - {name: pollutant, type: string}
+      - {name: value, type: float}
+      - {name: units, type: string, example: ug/m3|ppb}
+      - {name: qa_flag, type: string, nullable: true}
+      - {name: source, type: string}
+      - {name: source_url, type: string}
+      - {name: ingested_at, type: timestamp}
+  satellite_pixels:
+    description: TEMPO (and friends) gridded columns co-registered to a tile grid
+    partition: date
+    primary_key: [tile_id, ts, product, var]
+    columns:
+      - {name: tile_id, type: string}
+      - {name: ts, type: timestamp}
+      - {name: product, type: string, example: TEMPO_L2_NO2_NRT_V02}
+      - {name: var, type: string, example: NO2_tropospheric_column}
+      - {name: value, type: float}
+      - {name: units, type: string}
+      - {name: qa_flag, type: string, nullable: true}
+      - {name: geom_wkt, type: string}
+      - {name: source_url, type: string}
+      - {name: ingested_at, type: timestamp}
+  weather_grid:
+    description: Weather re/forecasts sampled on same tile grid (winds, PBLH, T, RH, precip)
+    partition: date
+    primary_key: [tile_id, ts, var]
+    columns:
+      - {name: tile_id, type: string}
+      - {name: ts, type: timestamp}
+      - {name: var, type: string}
+      - {name: value, type: float}
+      - {name: units, type: string}
+      - {name: model, type: string, example: HRRR}
+      - {name: ingested_at, type: timestamp}
+  fused_grid:
+    description: Blended estimate of surface PM2.5/O3 (nowcast), with uncertainty on tile grid
+    partition: date
+    primary_key: [tile_id, ts, pollutant]
+    columns:
+      - {name: tile_id, type: string}
+      - {name: ts, type: timestamp}
+      - {name: pollutant, type: string}
+      - {name: mean, type: float}
+      - {name: std, type: float}
+      - {name: method, type: string, example: kalman_fusion_v1}
+      - {name: inputs, type: string, description: json of contributing sources}
+  forecasts:
+    description: Multi-horizon forecasts per tile and pollutant
+    partition: date
+    primary_key: [tile_id, ts_issue, horizon_h, pollutant]
+    columns:
+      - {name: tile_id, type: string}
+      - {name: ts_issue, type: timestamp}
+      - {name: horizon_h, type: integer}
+      - {name: pollutant, type: string}
+      - {name: pred_mean, type: float}
+      - {name: pred_std, type: float}
+      - {name: model_name, type: string}
+      - {name: features, type: string, description: json of feature summary}
+  alerts:
+    description: User alert events (what was sent to whom, when, and why)
+    partition: date
+    primary_key: [user_id, ts_sent, pollutant]
+    columns:
+      - {name: user_id, type: string}
+      - {name: ts_sent, type: timestamp}
+      - {name: location, type: string, example: geohash|latlon}
+      - {name: pollutant, type: string}
+      - {name: aqi_category, type: string}
+      - {name: message, type: string}
+      - {name: channel, type: string, example: push|sms|email}
+  users:
+    description: Minimal user profile for preferences
+    primary_key: [user_id]
+    columns:
+      - {name: user_id, type: string}
+      - {name: audience, type: string, example: asthma|schools|eldercare|outdoor|general}
+      - {name: home_geohash, type: string}
+      - {name: quiet_hours_local, type: string, example: 21:00-07:00}
+      - {name: thresholds, type: string, description: json of AQI thresholds}
+  tiles:
+    description: Spatial tile registry
+    primary_key: [tile_id]
+    columns:
+      - {name: tile_id, type: string}
+      - {name: bbox, type: string, example: minx,miny,maxx,maxy}
+      - {name: centroid_lat, type: float}
+      - {name: centroid_lon, type: float}

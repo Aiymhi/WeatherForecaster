@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TEMPO AQ Forecaster — Wireframe</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+    }
+
+    header {
+      padding: 16px 20px;
+      background: #0a2540;
+      color: white;
+    }
+
+    .wrap {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .card {
+      border: 1px solid #e3e6ea;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .aqi {
+      font-size: 48px;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eef2f7;
+      margin-right: 8px;
+    }
+
+    .chart {
+      height: 260px;
+      background: repeating-linear-gradient(90deg, #f6f8fa, #f6f8fa 8px, #ffffff 8px, #ffffff 16px);
+      border-radius: 8px;
+      border: 1px dashed #cdd6e1;
+    }
+
+    .map {
+      height: 520px;
+      background: #c9d2df;
+      border-radius: 8px;
+      position: relative;
+    }
+
+    .legend {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      background: rgba(255, 255, 255, .9);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+    }
+
+    label {
+      font-size: 12px;
+      color: #334155;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #d1d8e0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <strong>TEMPO AQ Forecaster</strong>
+  </header>
+  <div class="wrap">
+    <div class="card">
+      <h3>Today · Seattle, WA</h3>
+      <div class="aqi">AQI 87 <span class="badge">Moderate</span></div>
+      <p>Limit prolonged outdoor exertion if symptomatic.</p>
+      <div class="chart" aria-label="Hourly AQI chart placeholder"></div>
+      <hr>
+      <label for="aud">Audience preset</label>
+      <select id="aud">
+        <option>General public</option>
+        <option>Asthma/COPD</option>
+        <option>Schools & athletics</option>
+        <option>Eldercare</option>
+        <option>Outdoor workers</option>
+      </select>
+      <br /><br />
+      <label for="pol">Pollutant</label>
+      <select id="pol">
+        <option>PM2.5</option>
+        <option>Ozone (O3)</option>
+        <option>Nitrogen dioxide (NO2)</option>
+      </select>
+      <br /><br />
+      <button>Enable alerts</button>
+    </div>
+    <div class="card">
+      <div class="map">
+        <div class="legend">
+          <div><strong>Layer</strong></div>
+          <label><input type="radio" name="layer" checked> Blended Nowcast</label><br>
+          <label><input type="radio" name="layer"> Forecast (24h)</label><br>
+          <label><input type="radio" name="layer"> TEMPO NO₂</label><br>
+          <label><input type="radio" name="layer"> Stations</label>
+        </div>
+      </div>
+      <p style="font-size:12px;color:#475569">Data provenance on hover · Local time · Last updated 10 mins ago</p>
+    </div>
+  </div>
+</body>
+
+</html>

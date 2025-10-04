@@ -1,0 +1,33 @@
+{
+  "value_id": "tile_12_2025-10-04T18:00Z_PM25",
+  "sources": [
+    {
+      "dataset": "OpenAQ",
+      "param": "PM2.5",
+      "count": 7,
+      "time_window_min": 30
+    },
+    {
+      "dataset": "TEMPO",
+      "product": "L2_NO2_NRT_V02",
+      "overpasses": 1,
+      "gap_fill": "spatial_idw"
+    },
+    {
+      "dataset": "HRRR",
+      "vars": [
+        "U10",
+        "V10",
+        "PBLH",
+        "T2",
+        "RH2"
+      ],
+      "cycle": "12Z"
+    }
+  ],
+  "processing": {
+    "nowcast_method": "kalman_fusion_v1",
+    "forecast_model": "sklearn_gbr_v0",
+    "issue_time": "2025-10-04T18:05:00Z"
+  }
+}
