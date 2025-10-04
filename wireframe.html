@@ -82,6 +82,9 @@
   </style>
 </head>
 
+
+
+
 <body>
   <header>
     <strong>TEMPO AQ Forecaster</strong>
@@ -91,7 +94,10 @@
       <h3>Today · Seattle, WA</h3>
       <div class="aqi">AQI 87 <span class="badge">Moderate</span></div>
       <p>Limit prolonged outdoor exertion if symptomatic.</p>
-      <div class="chart" aria-label="Hourly AQI chart placeholder"></div>
+      <div class="chart" style="height:260px;">
+        <canvas id="aqiChart" height="260"></canvas>
+      </div>
+      <div id="pointCount" style="font-size:12px;color:#64748b;margin-top:6px;"></div>
       <hr>
       <label for="aud">Audience preset</label>
       <select id="aud">
@@ -113,17 +119,28 @@
     </div>
     <div class="card">
       <div class="map">
+        <div id="leafletMap" style="height:520px; border-radius:8px;"></div>
         <div class="legend">
           <div><strong>Layer</strong></div>
-          <label><input type="radio" name="layer" checked> Blended Nowcast</label><br>
-          <label><input type="radio" name="layer"> Forecast (24h)</label><br>
-          <label><input type="radio" name="layer"> TEMPO NO₂</label><br>
-          <label><input type="radio" name="layer"> Stations</label>
+          <label><input type="radio" name="layer" value="nowcast" checked> Blended Nowcast</label><br>
+          <label><input type="radio" name="layer" value="forecast24"> Forecast (24h)</label><br>
+          <label><input type="radio" name="layer" value="tempo"> TEMPO NO₂</label><br>
+          <label><input type="radio" name="layer" value="stations"> Stations</label>
         </div>
       </div>
-      <p style="font-size:12px;color:#475569">Data provenance on hover · Local time · Last updated 10 mins ago</p>
+      <p style="font-size:12px;color:#475569">
+        Data provenance on hover · Local time · <span id="lastUpdated">Last updated just now</span>
+      </p>
+
     </div>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="assets/app.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="assets/map.js"></script>
+
 </body>
 
 </html>
